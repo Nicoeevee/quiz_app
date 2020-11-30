@@ -75,18 +75,27 @@ class _QuizTOFPageState extends State<QuizTOFPage> {
             children: [
               Expanded(
                 child: OutlineButton(
+                  padding: MediaQuery.of(context).size.width > 800 ? const EdgeInsets.symmetric(vertical: 20.0, horizontal: 64.0) : null,
                   onPressed: _prevSubmit,
-                  child: Text('上一题'),
+                  child: Text(
+                    '上一题',
+                    style: MediaQuery.of(context).size.width > 800 ? TextStyle(fontSize: 30.0) : null,
+                  ),
                 ),
               ),
               Expanded(
                 child: OutlineButton(
+                  padding: MediaQuery.of(context).size.width > 800 ? const EdgeInsets.symmetric(vertical: 20.0, horizontal: 64.0) : null,
                   onPressed: _submit,
-                  child: Text('检查'),
+                  child: Text(
+                    '检查',
+                    style: MediaQuery.of(context).size.width > 800 ? TextStyle(fontSize: 30.0) : null,
+                  ),
                 ),
               ),
               Expanded(
                 child: OutlineButton(
+                  padding: MediaQuery.of(context).size.width > 800 ? const EdgeInsets.symmetric(vertical: 20.0, horizontal: 64.0) : null,
                   onPressed: _nextSubmit,
                   child: Text(
                     _currentIndex == (widget.questions.length - 1) ? "提交" : "下一题",
