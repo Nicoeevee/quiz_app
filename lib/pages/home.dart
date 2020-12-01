@@ -155,19 +155,22 @@ Future buildShowModalBottomSheet(BuildContext context) {
                 runAlignment: WrapAlignment.center,
                 runSpacing: 16.0,
                 spacing: 16.0,
-                children: level
-                    .map((e) => ActionChip(
-                          padding: bBigSize(context) ? bigEdgeInsets : null,
-                          label: Text(
-                            e,
-                            style: bBigSize(context) ? bigTextStyle : null,
-                          ),
-                          onPressed: () {
-                            Navigator.pop(context, Type.TOF);
-                          },
-                        ))
-                    .expand((element) => [element, const SizedBox(width: 8)])
-                    .toList(),
+                children: [
+                  const SizedBox(width: 8),
+                  ...level
+                      .map((e) => ActionChip(
+                            padding: bBigSize(context) ? bigEdgeInsets : null,
+                            label: Text(
+                              e,
+                              style: bBigSize(context) ? bigTextStyle : null,
+                            ),
+                            onPressed: () {
+                              Navigator.pop(context, Type.TOF);
+                            },
+                          ))
+                      .expand((element) => [element, const SizedBox(width: 8)])
+                      .toList()
+                ],
               ),
             ],
           ),

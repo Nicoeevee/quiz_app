@@ -128,67 +128,74 @@ class _QuizFITBPageState extends State<QuizFITBPage> {
             ),
             Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Column(
+              child: Flex(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                direction: bBigSize(context) ? Axis.horizontal : Axis.vertical,
                 children: [
-                  Row(
-                    children: <Widget>[
-                      CircleAvatar(
-                        backgroundColor: Colors.white70,
-                        child: Text("${_currentIndex + 1}"),
-                      ),
-                      SizedBox(width: 16.0),
-                      Expanded(
-                        child: Text(
-                          widget.questions[_currentIndex].exercise,
-                          softWrap: true,
-                          style: bBigSize(context) ? _questionStyle.copyWith(fontSize: 30.0) : _questionStyle,
+                  Flexible(
+                    child: Row(
+                      children: <Widget>[
+                        CircleAvatar(
+                          backgroundColor: Colors.white70,
+                          child: Text("${_currentIndex + 1}"),
                         ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 16.0),
-                  Card(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                      child: Column(
-                        children: [
-                          Form(
-                            key: formKey,
-                            autovalidateMode: AutovalidateMode.disabled,
-                            child: TextFormField(
-                              decoration: const InputDecoration(labelText: '作答'),
-                              keyboardType: TextInputType.text,
-                              onSaved: (value) {
-                                setState(() {
-                                  _answers[_currentIndex] = value;
-                                });
-                              },
-                              validator: (value) {
-                                if (value.isEmpty) {
-                                  return '请作答';
-                                }
-                                return null;
-                              },
-                              controller: controller,
-                            ),
+                        SizedBox(width: 16.0),
+                        Expanded(
+                          child: Text(
+                            widget.questions[_currentIndex].exercise,
+                            softWrap: true,
+                            style: bBigSize(context) ? _questionStyle.copyWith(fontSize: 30.0) : _questionStyle,
                           ),
-                          SizedBox(height: 5.0),
-                          !showResult || _answers[_currentIndex] == null
-                              ? Container()
-                              : Column(
-                                  children: [
-                                    Text(
-                                      _answers[_currentIndex],
-                                      style: TextStyle(color: question.answer == _answers[_currentIndex] ? Colors.green : Colors.red, fontSize: 18.0, fontWeight: FontWeight.bold),
-                                    ),
-                                    SizedBox(height: 5.0),
-                                    Text.rich(
-                                      TextSpan(children: [TextSpan(text: "答案："), TextSpan(text: question.answer, style: TextStyle(fontWeight: FontWeight.w500))]),
-                                      style: TextStyle(fontSize: 16.0),
-                                    ),
-                                  ],
-                                ),
-                        ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  bBigSize(context) ? Container() : SizedBox(height: 16.0),
+                  Flexible(
+                    child: Card(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                        child: Column(
+                          children: [
+                            Form(
+                              key: formKey,
+                              autovalidateMode: AutovalidateMode.disabled,
+                              child: TextFormField(
+                                decoration: const InputDecoration(labelText: '作答'),
+                                keyboardType: TextInputType.text,
+                                onSaved: (value) {
+                                  setState(() {
+                                    _answers[_currentIndex] = value;
+                                  });
+                                },
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return '请作答';
+                                  }
+                                  return null;
+                                },
+                                controller: controller,
+                              ),
+                            ),
+                            SizedBox(height: 5.0),
+                            !showResult || _answers[_currentIndex] == null
+                                ? Container()
+                                : Column(
+                                    children: [
+                                      Text(
+                                        _answers[_currentIndex],
+                                        style: TextStyle(color: question.answer == _answers[_currentIndex] ? Colors.green : Colors.red, fontSize: 18.0, fontWeight: FontWeight.bold),
+                                      ),
+                                      SizedBox(height: 5.0),
+                                      Text.rich(
+                                        TextSpan(children: [TextSpan(text: "答案："), TextSpan(text: question.answer, style: TextStyle(fontWeight: FontWeight.w500))]),
+                                        style: TextStyle(fontSize: 16.0),
+                                      ),
+                                    ],
+                                  ),
+                          ],
+                        ),
                       ),
                     ),
                   ),

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:quiz_app/pages/quiz_finished.dart';
@@ -117,60 +118,67 @@ class _QuizTOFPageState extends State<QuizTOFPage> {
             ),
             Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Column(
+              child: Flex(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                direction: bBigSize(context) ? Axis.horizontal : Axis.vertical,
                 children: [
-                  Row(
-                    children: <Widget>[
-                      CircleAvatar(
-                        backgroundColor: Colors.white70,
-                        child: Text("${_currentIndex + 1}"),
-                      ),
-                      SizedBox(width: 16.0),
-                      Expanded(
-                        child: Text(
-                          widget.questions[_currentIndex].exercise,
-                          softWrap: true,
-                          style: bBigSize(context) ? _questionStyle.copyWith(fontSize: 30.0) : _questionStyle,
+                  Flexible(
+                    child: Row(
+                      children: <Widget>[
+                        CircleAvatar(
+                          backgroundColor: Colors.white70,
+                          child: Text("${_currentIndex + 1}"),
                         ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 16.0),
-                  Card(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        RadioListTile(
-                          title: Icon(Icons.check,
-                              color: !showResult || _answers[_currentIndex] == null
-                                  ? Colors.black
-                                  : question.answer == '√'
-                                      ? Colors.green
-                                      : Colors.red),
-                          value: '√',
-                          onChanged: (value) {
-                            setState(() {
-                              _answers[_currentIndex] = '√';
-                            });
-                          },
-                          groupValue: _answers[_currentIndex],
-                        ),
-                        RadioListTile(
-                          title: Icon(Icons.clear,
-                              color: !showResult || _answers[_currentIndex] == null
-                                  ? Colors.black
-                                  : question.answer == '×'
-                                      ? Colors.green
-                                      : Colors.red),
-                          value: '×',
-                          onChanged: (value) {
-                            setState(() {
-                              _answers[_currentIndex] = '×';
-                            });
-                          },
-                          groupValue: _answers[_currentIndex],
+                        SizedBox(width: 16.0),
+                        Expanded(
+                          child: Text(
+                            widget.questions[_currentIndex].exercise,
+                            softWrap: true,
+                            style: bBigSize(context) ? _questionStyle.copyWith(fontSize: 30.0) : _questionStyle,
+                          ),
                         ),
                       ],
+                    ),
+                  ),
+                  bBigSize(context) ? Container() : SizedBox(height: 16.0),
+                  Flexible(
+                    child: Card(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          RadioListTile(
+                            title: Icon(Icons.check,
+                                color: !showResult || _answers[_currentIndex] == null
+                                    ? Colors.black
+                                    : question.answer == '√'
+                                        ? Colors.green
+                                        : Colors.red),
+                            value: '√',
+                            onChanged: (value) {
+                              setState(() {
+                                _answers[_currentIndex] = '√';
+                              });
+                            },
+                            groupValue: _answers[_currentIndex],
+                          ),
+                          RadioListTile(
+                            title: Icon(Icons.clear,
+                                color: !showResult || _answers[_currentIndex] == null
+                                    ? Colors.black
+                                    : question.answer == '×'
+                                        ? Colors.green
+                                        : Colors.red),
+                            value: '×',
+                            onChanged: (value) {
+                              setState(() {
+                                _answers[_currentIndex] = '×';
+                              });
+                            },
+                            groupValue: _answers[_currentIndex],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],
