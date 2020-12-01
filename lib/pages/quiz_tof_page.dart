@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:quiz_app/pages/quiz_finished.dart';
@@ -66,127 +65,136 @@ class _QuizTOFPageState extends State<QuizTOFPage> {
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
-        key: _key,
-        appBar: AppBar(
-          title: Text("${typeValues.reverse[question.type]} ${_currentIndex + 1}/${widget.questions.length}"),
-        ),
-        bottomNavigationBar: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          child: Row(
+          key: _key,
+          appBar: AppBar(
+            title: Text("${typeValues.reverse[question.type]} ${_currentIndex + 1}/${widget.questions.length}"),
+          ),
+          body: Stack(
             children: [
-              Expanded(
-                child: OutlineButton(
-                  padding: calPadding(context),
-                  onPressed: _prevSubmit,
-                  child: Text(
-                    '上一题',
-                    style: calStyle(context),
-                  ),
+              ClipPath(
+                clipper: WaveClipperTwo(),
+                child: Container(
+                  decoration: BoxDecoration(color: Theme.of(context).primaryColor),
+                  height: 200,
                 ),
               ),
-              Expanded(
-                child: OutlineButton(
-                  padding: calPadding(context),
-                  onPressed: _submit,
-                  child: Text(
-                    '检查',
-                    style: calStyle(context),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: OutlineButton(
-                  padding: calPadding(context),
-                  onPressed: _nextSubmit,
-                  child: Text(
-                    _currentIndex == (widget.questions.length - 1) ? "提交" : "下一题",
-                    style: calStyle(context),
-                  ),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Flex(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  direction: bBigSize(context) ? Axis.horizontal : Axis.vertical,
+                  children: [
+                    Flexible(
+                      child: Row(
+                        children: <Widget>[
+                          CircleAvatar(
+                            backgroundColor: Colors.white70,
+                            child: Text("${_currentIndex + 1}"),
+                          ),
+                          SizedBox(width: 16.0),
+                          Expanded(
+                            child: Text(
+                              widget.questions[_currentIndex].exercise,
+                              softWrap: true,
+                              style: bBigSize(context) ? _questionStyle.copyWith(fontSize: 30.0) : _questionStyle,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    bBigSize(context) ? Container() : SizedBox(height: 16.0),
+                    Flexible(
+                      child: Card(
+                        child: Flex(
+                          mainAxisSize: MainAxisSize.min,
+                          direction: Axis.vertical,
+                          children: [
+                            Flexible(
+                              child: RadioListTile(
+                                title: Icon(Icons.check,
+                                    color: !showResult || _answers[_currentIndex] == null
+                                        ? Colors.black
+                                        : question.answer == '√'
+                                            ? Colors.green
+                                            : Colors.red),
+                                value: '√',
+                                onChanged: (value) {
+                                  setState(() {
+                                    _answers[_currentIndex] = '√';
+                                  });
+                                },
+                                groupValue: _answers[_currentIndex],
+                              ),
+                            ),
+                            Flexible(
+                              child: RadioListTile(
+                                title: Icon(Icons.clear,
+                                    color: !showResult || _answers[_currentIndex] == null
+                                        ? Colors.black
+                                        : question.answer == '×'
+                                            ? Colors.green
+                                            : Colors.red),
+                                value: '×',
+                                onChanged: (value) {
+                                  setState(() {
+                                    _answers[_currentIndex] = '×';
+                                  });
+                                },
+                                groupValue: _answers[_currentIndex],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
           ),
-        ),
-        body: Stack(
-          children: [
-            ClipPath(
-              clipper: WaveClipperTwo(),
-              child: Container(
-                decoration: BoxDecoration(color: Theme.of(context).primaryColor),
-                height: 200,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Flex(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                direction: bBigSize(context) ? Axis.horizontal : Axis.vertical,
+          floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+          floatingActionButton: FloatingActionButton(
+            onPressed: _submit,
+            child: Icon(Icons.search_rounded),
+            tooltip: '检查',
+          ),
+          bottomNavigationBar: BottomAppBar(
+            shape: CircularNotchedRectangle(),
+            color: Theme.of(context).primaryColor,
+            notchMargin: 5,
+            child: SizedBox(
+              height: bBigSize(context) ? 64 : null,
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Flexible(
-                    child: Row(
-                      children: <Widget>[
-                        CircleAvatar(
-                          backgroundColor: Colors.white70,
-                          child: Text("${_currentIndex + 1}"),
-                        ),
-                        SizedBox(width: 16.0),
-                        Expanded(
-                          child: Text(
-                            widget.questions[_currentIndex].exercise,
-                            softWrap: true,
-                            style: bBigSize(context) ? _questionStyle.copyWith(fontSize: 30.0) : _questionStyle,
-                          ),
-                        ),
-                      ],
+                  Expanded(
+                    child: IconButton(
+                      // padding: calPadding(context),
+                      onPressed: _prevSubmit,
+                      tooltip: '上一题',
+                      icon: Icon(
+                        Icons.chevron_left_rounded,
+                        color: Theme.of(context).buttonColor,
+                      ),
                     ),
                   ),
-                  bBigSize(context) ? Container() : SizedBox(height: 16.0),
-                  Flexible(
-                    child: Card(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          RadioListTile(
-                            title: Icon(Icons.check,
-                                color: !showResult || _answers[_currentIndex] == null
-                                    ? Colors.black
-                                    : question.answer == '√'
-                                        ? Colors.green
-                                        : Colors.red),
-                            value: '√',
-                            onChanged: (value) {
-                              setState(() {
-                                _answers[_currentIndex] = '√';
-                              });
-                            },
-                            groupValue: _answers[_currentIndex],
-                          ),
-                          RadioListTile(
-                            title: Icon(Icons.clear,
-                                color: !showResult || _answers[_currentIndex] == null
-                                    ? Colors.black
-                                    : question.answer == '×'
-                                        ? Colors.green
-                                        : Colors.red),
-                            value: '×',
-                            onChanged: (value) {
-                              setState(() {
-                                _answers[_currentIndex] = '×';
-                              });
-                            },
-                            groupValue: _answers[_currentIndex],
-                          ),
-                        ],
+                  Expanded(
+                    child: IconButton(
+                      // padding: calPadding(context),
+                      onPressed: _nextSubmit,
+                      tooltip: _currentIndex == (widget.questions.length - 1) ? '提交' : '下一题',
+                      icon: Icon(
+                        _currentIndex == (widget.questions.length - 1) ? Icons.done_outlined : Icons.chevron_right_rounded,
+                        color: Theme.of(context).buttonColor,
                       ),
                     ),
                   ),
                 ],
               ),
             ),
-          ],
-        ),
-      ),
+          )),
     );
   }
 

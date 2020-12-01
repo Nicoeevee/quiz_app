@@ -1,6 +1,8 @@
 import 'dart:math';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:quiz_app/entity/question.dart';
 
 import 'quiz_tof_page.dart';
@@ -112,9 +114,19 @@ Card buildCard(BuildContext context, item, data) {
       onTap: () {
         goToPage(context, data);
       },
-      child: Padding(
+      child: Container(
+        alignment: Alignment.center,
         padding: const EdgeInsets.all(8.0),
-        child: Text(item, style: bBigSize(context) ? TextStyle(fontSize: 30.0, color: Colors.white) : TextStyle(color: Colors.white)),
+        child: AutoSizeText(item,
+            minFontSize: 10.0,
+            textAlign: TextAlign.center,
+            maxLines: 3,
+            wrapWords: false,
+            style: bBigSize(context)
+                ? GoogleFonts.zcoolQingKeHuangYou(fontSize: 30.0, color: Colors.white)
+                : GoogleFonts.zcoolQingKeHuangYou(
+                    color: Colors.white,
+                  )),
       ),
     ),
     color: Colors.primaries[Random().nextInt(Colors.primaries.length)],

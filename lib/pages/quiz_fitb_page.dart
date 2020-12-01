@@ -80,43 +80,6 @@ class _QuizFITBPageState extends State<QuizFITBPage> {
         appBar: AppBar(
           title: Text("${typeValues.reverse[question.type]} ${_currentIndex + 1}/${widget.questions.length}"),
         ),
-        bottomNavigationBar: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          child: Row(
-            children: [
-              Expanded(
-                child: OutlineButton(
-                  padding: calPadding(context),
-                  onPressed: _prevSubmit,
-                  child: Text(
-                    '上一题',
-                    style: calStyle(context),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: OutlineButton(
-                  padding: calPadding(context),
-                  onPressed: _submit,
-                  child: Text(
-                    '检查',
-                    style: calStyle(context),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: OutlineButton(
-                  padding: calPadding(context),
-                  onPressed: _nextSubmit,
-                  child: Text(
-                    _currentIndex == (widget.questions.length - 1) ? "提交" : "下一题",
-                    style: calStyle(context),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
         body: Stack(
           children: [
             ClipPath(
@@ -203,6 +166,48 @@ class _QuizFITBPageState extends State<QuizFITBPage> {
               ),
             ),
           ],
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: FloatingActionButton(
+          onPressed: _submit,
+          child: Icon(Icons.search_rounded),
+          tooltip: '检查',
+        ),
+        bottomNavigationBar: BottomAppBar(
+          shape: CircularNotchedRectangle(),
+          color: Theme.of(context).primaryColor,
+          notchMargin: 5,
+          child: SizedBox(
+            height: bBigSize(context) ? 64 : null,
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Expanded(
+                  child: IconButton(
+                    // padding: calPadding(context),
+                    onPressed: _prevSubmit,
+                    tooltip: '上一题',
+                    icon: Icon(
+                      Icons.chevron_left_rounded,
+                      color: Theme.of(context).buttonColor,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: IconButton(
+                    // padding: calPadding(context),
+                    onPressed: _nextSubmit,
+                    tooltip: _currentIndex == (widget.questions.length - 1) ? '提交' : '下一题',
+                    icon: Icon(
+                      _currentIndex == (widget.questions.length - 1) ? Icons.done_outlined : Icons.chevron_right_rounded,
+                      color: Theme.of(context).buttonColor,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
