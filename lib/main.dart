@@ -50,11 +50,12 @@ class _MyAppState extends State<MyApp> {
         const Locale('zh', 'CH'),
         const Locale('en', 'US'),
       ],
-      localeListResolutionCallback: (List<Locale> locales, Iterable<Locale> supportedLocales) {
-        if (locales.contains('zh')) {
-          return Locale('zh');
+      localeResolutionCallback: (Locale locale, Iterable<Locale> supportedLocales) {
+        var result = supportedLocales.where((element) => element.languageCode == locale.languageCode);
+        if (result.isNotEmpty) {
+          return locale;
         }
-        return Locale('en');
+        return Locale('zh');
       },
       debugShowCheckedModeBanner: false,
       title: _widgetTitle[_selectedIndex],
