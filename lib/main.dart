@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:quiz_app/pages/me.dart';
 
 import 'pages/home.dart';
@@ -12,9 +13,22 @@ class MyApp extends StatefulWidget {
   _MyAppState createState() => _MyAppState();
 }
 
+Future<String> _loadFromAsset() async {
+  return await rootBundle.loadString("assets/quiz.json");
+}
+
 class _MyAppState extends State<MyApp> {
   int _selectedIndex = 0;
-  static List<Widget> _widgetOptions = <Widget>[HomePage(), MePage()];
+  static List<Widget> _widgetOptions = <Widget>[
+    FutureBuilder(
+        future: _loadFromAsset(),
+        builder: (context, snapshot) {
+          return HomePage(
+            data: snapshot.data,
+          );
+        }),
+    MePage()
+  ];
   static List<String> _widgetTitle = <String>['目录', '我的'];
 
   void _onItemTapped(int index) {
@@ -26,12 +40,13 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: _widgetTitle[_selectedIndex],
       home: Scaffold(
-        appBar: AppBar(
-          title: Text(_widgetTitle[_selectedIndex]),
+        body: IndexedStack(
+          index: _selectedIndex,
+          children: _widgetOptions,
         ),
-        body: _widgetOptions.elementAt(_selectedIndex),
         bottomNavigationBar: BottomNavigationBar(
           items: [
             BottomNavigationBarItem(icon: Icon(Icons.category), label: '目录'),

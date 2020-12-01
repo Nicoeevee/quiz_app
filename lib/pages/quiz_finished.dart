@@ -3,19 +3,24 @@ import 'package:flutter/material.dart';
 import '../entity/question.dart';
 import 'check_answers.dart';
 
-class QuizFinishedPage extends StatelessWidget {
+class QuizFinishedPage extends StatefulWidget {
   final List<Question> questions;
   final Map<int, dynamic> answers;
-
-  int correctAnswers;
 
   QuizFinishedPage({Key key, @required this.questions, @required this.answers}) : super(key: key) {}
 
   @override
+  _QuizFinishedPageState createState() => _QuizFinishedPageState();
+}
+
+class _QuizFinishedPageState extends State<QuizFinishedPage> {
+  int correctAnswers;
+
+  @override
   Widget build(BuildContext context) {
     int correct = 0;
-    this.answers.forEach((index, value) {
-      if (this.questions[index].answer == value) correct++;
+    this.widget.answers.forEach((index, value) {
+      if (this.widget.questions[index].answer == value) correct++;
     });
     final TextStyle titleStyle = TextStyle(color: Colors.black87, fontSize: 16.0, fontWeight: FontWeight.w500);
     final TextStyle trailingStyle = TextStyle(color: Theme.of(context).primaryColor, fontSize: 16.0, fontWeight: FontWeight.bold);
@@ -37,7 +42,7 @@ class QuizFinishedPage extends StatelessWidget {
                 child: ListTile(
                   contentPadding: const EdgeInsets.all(16.0),
                   title: Text("总题数", style: titleStyle),
-                  trailing: Text("${questions.length}", style: trailingStyle),
+                  trailing: Text("${widget.questions.length}", style: trailingStyle),
                 ),
               ),
               SizedBox(height: 10.0),
@@ -46,7 +51,7 @@ class QuizFinishedPage extends StatelessWidget {
                 child: ListTile(
                   contentPadding: const EdgeInsets.all(16.0),
                   title: Text("得分", style: titleStyle),
-                  trailing: Text("${(correct / questions.length * 100).toStringAsFixed(2)}%", style: trailingStyle),
+                  trailing: Text("${(correct / widget.questions.length * 100).toStringAsFixed(2)}%", style: trailingStyle),
                 ),
               ),
               SizedBox(height: 10.0),
@@ -55,7 +60,7 @@ class QuizFinishedPage extends StatelessWidget {
                 child: ListTile(
                   contentPadding: const EdgeInsets.all(16.0),
                   title: Text("正确答案", style: titleStyle),
-                  trailing: Text("$correct/${questions.length}", style: trailingStyle),
+                  trailing: Text("$correct/${widget.questions.length}", style: trailingStyle),
                 ),
               ),
               SizedBox(height: 10.0),
@@ -64,7 +69,7 @@ class QuizFinishedPage extends StatelessWidget {
                 child: ListTile(
                   contentPadding: const EdgeInsets.all(16.0),
                   title: Text("错误答案", style: titleStyle),
-                  trailing: Text("${questions.length - correct}/${questions.length}", style: trailingStyle),
+                  trailing: Text("${widget.questions.length - correct}/${widget.questions.length}", style: trailingStyle),
                 ),
               ),
               SizedBox(height: 16.0),
@@ -88,8 +93,8 @@ class QuizFinishedPage extends StatelessWidget {
                     onPressed: () {
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (_) => CheckAnswersPage(
-                                questions: questions,
-                                answers: answers,
+                                questions: widget.questions,
+                                answers: widget.answers,
                               )));
                     },
                   ),

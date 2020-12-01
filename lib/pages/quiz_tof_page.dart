@@ -75,31 +75,31 @@ class _QuizTOFPageState extends State<QuizTOFPage> {
             children: [
               Expanded(
                 child: OutlineButton(
-                  padding: MediaQuery.of(context).size.width > 800 ? const EdgeInsets.symmetric(vertical: 20.0, horizontal: 64.0) : null,
+                  padding: calPadding(context),
                   onPressed: _prevSubmit,
                   child: Text(
                     '上一题',
-                    style: MediaQuery.of(context).size.width > 800 ? TextStyle(fontSize: 30.0) : null,
+                    style: calStyle(context),
                   ),
                 ),
               ),
               Expanded(
                 child: OutlineButton(
-                  padding: MediaQuery.of(context).size.width > 800 ? const EdgeInsets.symmetric(vertical: 20.0, horizontal: 64.0) : null,
+                  padding: calPadding(context),
                   onPressed: _submit,
                   child: Text(
                     '检查',
-                    style: MediaQuery.of(context).size.width > 800 ? TextStyle(fontSize: 30.0) : null,
+                    style: calStyle(context),
                   ),
                 ),
               ),
               Expanded(
                 child: OutlineButton(
-                  padding: MediaQuery.of(context).size.width > 800 ? const EdgeInsets.symmetric(vertical: 20.0, horizontal: 64.0) : null,
+                  padding: calPadding(context),
                   onPressed: _nextSubmit,
                   child: Text(
                     _currentIndex == (widget.questions.length - 1) ? "提交" : "下一题",
-                    style: MediaQuery.of(context).size.width > 800 ? TextStyle(fontSize: 30.0) : null,
+                    style: calStyle(context),
                   ),
                 ),
               ),
@@ -130,7 +130,7 @@ class _QuizTOFPageState extends State<QuizTOFPage> {
                         child: Text(
                           widget.questions[_currentIndex].exercise,
                           softWrap: true,
-                          style: MediaQuery.of(context).size.width > 800 ? _questionStyle.copyWith(fontSize: 30.0) : _questionStyle,
+                          style: bBigSize(context) ? _questionStyle.copyWith(fontSize: 30.0) : _questionStyle,
                         ),
                       ),
                     ],
@@ -181,6 +181,12 @@ class _QuizTOFPageState extends State<QuizTOFPage> {
       ),
     );
   }
+
+  bool bBigSize(BuildContext context) => MediaQuery.of(context).size.width > 800;
+
+  TextStyle calStyle(BuildContext context) => bBigSize(context) ? TextStyle(fontSize: 30.0) : null;
+
+  EdgeInsets calPadding(BuildContext context) => bBigSize(context) ? const EdgeInsets.symmetric(vertical: 20.0, horizontal: 64.0) : null;
 
   Future<bool> _onWillPop() async {
     return showDialog<bool>(
