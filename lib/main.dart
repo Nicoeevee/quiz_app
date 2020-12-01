@@ -30,7 +30,10 @@ class _MyAppState extends State<MyApp> {
         }),
     MePage()
   ];
-  static List<String> _widgetTitle = <String>['目录', '我的'];
+  static Map<String, dynamic> _widgetTitle = {
+    '目录': Icons.category,
+    '我的': Icons.person,
+  };
 
   void _onItemTapped(int index) {
     setState(() {
@@ -58,17 +61,19 @@ class _MyAppState extends State<MyApp> {
         return Locale('zh');
       },
       debugShowCheckedModeBanner: false,
-      title: 'Quiz - ${_widgetTitle[_selectedIndex]}',
+      title: 'Quiz - ${_widgetTitle.keys.elementAt(_selectedIndex)}',
       home: Scaffold(
         body: IndexedStack(
           index: _selectedIndex,
           children: _widgetOptions,
         ),
         bottomNavigationBar: BottomNavigationBar(
-          items: [
-            BottomNavigationBarItem(icon: Icon(Icons.category), label: '目录'),
-            BottomNavigationBarItem(icon: Icon(Icons.person), label: '我的'),
-          ],
+          items: _widgetTitle.entries
+              .map((e) => BottomNavigationBarItem(
+                    icon: Icon(e.value),
+                    label: e.key,
+                  ))
+              .toList(),
           currentIndex: _selectedIndex,
           onTap: _onItemTapped,
         ),
