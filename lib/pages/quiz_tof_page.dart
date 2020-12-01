@@ -105,46 +105,48 @@ class _QuizTOFPageState extends State<QuizTOFPage> {
                     ),
                     bBigSize(context) ? Container() : SizedBox(height: 16.0),
                     Flexible(
-                      child: Card(
-                        child: Flex(
-                          mainAxisSize: MainAxisSize.min,
-                          direction: Axis.vertical,
-                          children: [
-                            Flexible(
-                              child: RadioListTile(
-                                title: Icon(Icons.check,
-                                    color: !showResult || _answers[_currentIndex] == null
-                                        ? Colors.black
-                                        : question.answer == '√'
-                                            ? Colors.green
-                                            : Colors.red),
-                                value: '√',
-                                onChanged: (value) {
-                                  setState(() {
-                                    _answers[_currentIndex] = '√';
-                                  });
-                                },
-                                groupValue: _answers[_currentIndex],
+                      child: SingleChildScrollView(
+                        child: Card(
+                          child: Flex(
+                            mainAxisSize: MainAxisSize.min,
+                            direction: Axis.vertical,
+                            children: [
+                              Flexible(
+                                child: RadioListTile(
+                                  title: Icon(Icons.check,
+                                      color: !showResult || _answers[_currentIndex] == null
+                                          ? Colors.black
+                                          : question.answer == '√'
+                                              ? Colors.green
+                                              : Colors.red),
+                                  value: '√',
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _answers[_currentIndex] = '√';
+                                    });
+                                  },
+                                  groupValue: _answers[_currentIndex],
+                                ),
                               ),
-                            ),
-                            Flexible(
-                              child: RadioListTile(
-                                title: Icon(Icons.clear,
-                                    color: !showResult || _answers[_currentIndex] == null
-                                        ? Colors.black
-                                        : question.answer == '×'
-                                            ? Colors.green
-                                            : Colors.red),
-                                value: '×',
-                                onChanged: (value) {
-                                  setState(() {
-                                    _answers[_currentIndex] = '×';
-                                  });
-                                },
-                                groupValue: _answers[_currentIndex],
+                              Flexible(
+                                child: RadioListTile(
+                                  title: Icon(Icons.clear,
+                                      color: !showResult || _answers[_currentIndex] == null
+                                          ? Colors.black
+                                          : question.answer == '×'
+                                              ? Colors.green
+                                              : Colors.red),
+                                  value: '×',
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _answers[_currentIndex] = '×';
+                                    });
+                                  },
+                                  groupValue: _answers[_currentIndex],
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),

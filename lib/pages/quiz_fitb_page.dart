@@ -116,49 +116,51 @@ class _QuizFITBPageState extends State<QuizFITBPage> {
                   ),
                   bBigSize(context) ? Container() : SizedBox(height: 16.0),
                   Flexible(
-                    child: Card(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Form(
-                              key: formKey,
-                              autovalidateMode: AutovalidateMode.disabled,
-                              child: TextFormField(
-                                decoration: const InputDecoration(labelText: '作答'),
-                                keyboardType: TextInputType.text,
-                                onSaved: (value) {
-                                  setState(() {
-                                    _answers[_currentIndex] = value;
-                                  });
-                                },
-                                validator: (value) {
-                                  if (value.isEmpty) {
-                                    return '请作答';
-                                  }
-                                  return null;
-                                },
-                                controller: controller,
+                    child: SingleChildScrollView(
+                      child: Card(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Form(
+                                key: formKey,
+                                autovalidateMode: AutovalidateMode.disabled,
+                                child: TextFormField(
+                                  decoration: const InputDecoration(labelText: '作答'),
+                                  keyboardType: TextInputType.text,
+                                  onSaved: (value) {
+                                    setState(() {
+                                      _answers[_currentIndex] = value;
+                                    });
+                                  },
+                                  validator: (value) {
+                                    if (value.isEmpty) {
+                                      return '请作答';
+                                    }
+                                    return null;
+                                  },
+                                  controller: controller,
+                                ),
                               ),
-                            ),
-                            SizedBox(height: 5.0),
-                            !showResult || _answers[_currentIndex] == null
-                                ? Container()
-                                : Column(
-                                    children: [
-                                      Text(
-                                        _answers[_currentIndex],
-                                        style: TextStyle(color: question.answer == _answers[_currentIndex] ? Colors.green : Colors.red, fontSize: 18.0, fontWeight: FontWeight.bold),
-                                      ),
-                                      SizedBox(height: 5.0),
-                                      Text.rich(
-                                        TextSpan(children: [TextSpan(text: "答案："), TextSpan(text: question.answer, style: TextStyle(fontWeight: FontWeight.w500))]),
-                                        style: TextStyle(fontSize: 16.0),
-                                      ),
-                                    ],
-                                  ),
-                          ],
+                              SizedBox(height: 5.0),
+                              !showResult || _answers[_currentIndex] == null
+                                  ? Container()
+                                  : Column(
+                                      children: [
+                                        Text(
+                                          _answers[_currentIndex],
+                                          style: TextStyle(color: question.answer == _answers[_currentIndex] ? Colors.green : Colors.red, fontSize: 18.0, fontWeight: FontWeight.bold),
+                                        ),
+                                        SizedBox(height: 5.0),
+                                        Text.rich(
+                                          TextSpan(children: [TextSpan(text: "答案："), TextSpan(text: question.answer, style: TextStyle(fontWeight: FontWeight.w500))]),
+                                          style: TextStyle(fontSize: 16.0),
+                                        ),
+                                      ],
+                                    ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
