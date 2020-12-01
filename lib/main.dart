@@ -58,7 +58,7 @@ class _MyAppState extends State<MyApp> {
         return Locale('zh');
       },
       debugShowCheckedModeBanner: false,
-      title: _widgetTitle[_selectedIndex],
+      title: 'Quiz - ${_widgetTitle[_selectedIndex]}',
       home: Scaffold(
         body: IndexedStack(
           index: _selectedIndex,
