@@ -191,9 +191,12 @@ class _MySearchDelegate extends SearchDelegate<String> {
         super();
 
   @override
+  String get searchFieldLabel => "按工种搜索";
+
+  @override
   Widget buildLeading(BuildContext context) {
     return IconButton(
-      tooltip: 'Back',
+      tooltip: '返回',
       icon: AnimatedIcon(
         icon: AnimatedIcons.menu_arrow,
         progress: transitionAnimation,
