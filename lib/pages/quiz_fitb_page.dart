@@ -120,6 +120,7 @@ class _QuizFITBPageState extends State<QuizFITBPage> {
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                         child: Column(
+                          mainAxisSize: MainAxisSize.min,
                           children: [
                             Form(
                               key: formKey,

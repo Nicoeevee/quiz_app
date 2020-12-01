@@ -4,17 +4,23 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:quiz_app/entity/question.dart';
+import 'package:quiz_app/pages/quiz_fitb_page.dart';
 
 import 'quiz_tof_page.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   final data;
 
   HomePage({Key key, this.data}) : super(key: key);
 
   @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  @override
   Widget build(BuildContext context) {
-    _MySearchDelegate _delegate = _MySearchDelegate(type, data);
+    _MySearchDelegate _delegate = _MySearchDelegate(typeOfWork, widget.data);
 
     return Scaffold(
       appBar: AppBar(
@@ -41,13 +47,178 @@ class HomePage extends StatelessWidget {
           ),
         ],
       ),
-      body: buildGridView(context, type, data),
+      body: Scrollbar(
+        child: GridView.builder(
+          physics: BouncingScrollPhysics(),
+          padding: const EdgeInsets.all(8.0),
+          itemCount: typeOfWork.length,
+          itemBuilder: (BuildContext context, int index) {
+            final item = typeOfWork[index];
+            return Card(
+              child: InkWell(
+                onTap: () async {
+                  final Type result = await showModalBottomSheet(
+                    context: context,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(16),
+                        topRight: Radius.circular(16),
+                      ),
+                    ),
+                    backgroundColor: Colors.white,
+                    builder: (BuildContext context) {
+                      final bigTextStyle = const TextStyle(fontSize: 16.0);
+                      final bigEdgeInsets = const EdgeInsets.symmetric(vertical: 16.0, horizontal: 32.0);
+                      int _noOfQuestions = 10;
+                      Difficulty _difficulty = Difficulty.PRIMARY;
+                      Type _quizType = Type.FITB;
+                      bool processing = false;
+                      return StatefulBuilder(
+                        builder: (BuildContext context, void Function(void Function()) setModalState) {
+                          return SingleChildScrollView(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const SizedBox(height: 16),
+                                Text(
+                                  "数量",
+                                  style: bBigSize(context) ? bigTextStyle : null,
+                                ),
+                                const SizedBox(height: 8),
+                                Wrap(
+                                  alignment: WrapAlignment.center,
+                                  runAlignment: WrapAlignment.center,
+                                  runSpacing: 16.0,
+                                  spacing: 16.0,
+                                  children: List.generate(5, (index) => (index + 1) * 10)
+                                      .map((e) => ChoiceChip(
+                                            padding: bBigSize(context) ? bigEdgeInsets : null,
+                                            label: Text(
+                                              '$e',
+                                              style: bBigSize(context) ? bigTextStyle : null,
+                                            ),
+                                            selected: _noOfQuestions == e,
+                                            onSelected: (bool selected) {
+                                              setModalState(() {
+                                                _noOfQuestions = e;
+                                              });
+                                            },
+                                          ))
+                                      .toList(),
+                                ),
+                                const SizedBox(height: 16),
+                                Text(
+                                  "等级",
+                                  style: bBigSize(context) ? bigTextStyle : null,
+                                ),
+                                const SizedBox(height: 8),
+                                Wrap(
+                                  alignment: WrapAlignment.center,
+                                  runAlignment: WrapAlignment.center,
+                                  runSpacing: 16.0,
+                                  spacing: 16.0,
+                                  children: Difficulty.values
+                                      .map((Difficulty e) => ChoiceChip(
+                                            padding: bBigSize(context) ? bigEdgeInsets : null,
+                                            label: Text(
+                                              difficultyValues.reverse[e],
+                                              style: bBigSize(context) ? bigTextStyle : null,
+                                            ),
+                                            selected: _difficulty == e,
+                                            onSelected: (bool selected) {
+                                              setModalState(() {
+                                                _difficulty = e;
+                                              });
+                                            },
+                                          ))
+                                      .toList(),
+                                ),
+                                const SizedBox(height: 16),
+                                Text(
+                                  "题型",
+                                  style: bBigSize(context) ? bigTextStyle : null,
+                                ),
+                                const SizedBox(height: 8),
+                                Wrap(
+                                  alignment: WrapAlignment.center,
+                                  runAlignment: WrapAlignment.center,
+                                  runSpacing: 16.0,
+                                  spacing: 16.0,
+                                  children: Type.values
+                                      .map((e) => ChoiceChip(
+                                            padding: bBigSize(context) ? bigEdgeInsets : null,
+                                            label: Text(
+                                              typeValues.reverse[e],
+                                              style: bBigSize(context) ? bigTextStyle : null,
+                                            ),
+                                            selected: _quizType == e,
+                                            onSelected: (bool selected) {
+                                              setModalState(() {
+                                                _quizType = e;
+                                              });
+                                              //
+                                            },
+                                          ))
+                                      .toList(),
+                                ),
+                                const SizedBox(height: 16),
+                                processing
+                                    ? CircularProgressIndicator()
+                                    : FloatingActionButton(
+                                        tooltip: '开始',
+                                        onPressed: () {
+                                          Navigator.pop(context, _quizType);
+                                        },
+                                        child: Icon(Icons.done_rounded),
+                                      ),
+                                const SizedBox(height: 16),
+                              ],
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  );
+                  if (result != null) {
+                    final list2 = questionFromJson(widget.data).where((element) => element.type == result).toList();
+                    switch (result) {
+                      case Type.FITB:
+                        Navigator.push(context, MaterialPageRoute(builder: (_) => QuizFITBPage(questions: list2)));
+                        break;
+                      case Type.TOF:
+                        Navigator.push(context, MaterialPageRoute(builder: (_) => QuizTOFPage(questions: list2)));
+                        break;
+                    }
+                  }
+                },
+                child: Container(
+                  alignment: Alignment.center,
+                  padding: const EdgeInsets.all(8.0),
+                  child: AutoSizeText(item,
+                      minFontSize: 10.0,
+                      textAlign: TextAlign.center,
+                      maxLines: 3,
+                      wrapWords: false,
+                      style: bBigSize(context)
+                          ? GoogleFonts.zcoolQingKeHuangYou(fontSize: 30.0, color: Colors.white)
+                          : GoogleFonts.zcoolQingKeHuangYou(
+                              color: Colors.white,
+                            )),
+                ),
+              ),
+              color: Colors.primaries[Random().nextInt(Colors.primaries.length)],
+            );
+          },
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: bBigSize(context) ? 5 : 3,
+          ),
+        ),
+      ),
     );
   }
 }
 
-final List<String> level = <String>["初级", "中级", "高级"];
-final List<String> type = <String>[
+final List<String> typeOfWork = <String>[
   "测量工题库",
   "混凝土工",
   "爆破工",
@@ -73,124 +244,6 @@ final List<String> type = <String>[
   "机加工",
   "电动扒渣机操作手"
 ];
-
-Scrollbar buildGridView(BuildContext context, list, data) {
-  return Scrollbar(
-    child: GridView.builder(
-      physics: BouncingScrollPhysics(),
-      padding: const EdgeInsets.all(8.0),
-      itemCount: list.length,
-      itemBuilder: (BuildContext context, int index) {
-        final item = list[index];
-        return buildCard(context, item, data);
-      },
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: bBigSize(context) ? 5 : 3,
-      ),
-
-      // [
-      //   ListTile(
-      //     leading: Icon(Icons.rule),
-      //     title: Text('判断题'),
-      //     onTap: () {
-      //       Navigator.push(context, MaterialPageRoute(builder: (_) => QuizTOFPage(questions: questionFromJson(snapshot.data).where((element) => element.type == Type.TOF).toList())));
-      //     },
-      //   ),
-      //   ListTile(
-      //     leading: Icon(Icons.create),
-      //     title: Text('填空题'),
-      //     onTap: () {
-      //       Navigator.push(context, MaterialPageRoute(builder: (_) => QuizFITBPage(questions: questionFromJson(snapshot.data).where((element) => element.type == Type.FITB).toList())));
-      //     },
-      //   )
-      // ],
-    ),
-  );
-}
-
-Card buildCard(BuildContext context, item, data) {
-  return Card(
-    child: InkWell(
-      onTap: () {
-        goToPage(context, data);
-      },
-      child: Container(
-        alignment: Alignment.center,
-        padding: const EdgeInsets.all(8.0),
-        child: AutoSizeText(item,
-            minFontSize: 10.0,
-            textAlign: TextAlign.center,
-            maxLines: 3,
-            wrapWords: false,
-            style: bBigSize(context)
-                ? GoogleFonts.zcoolQingKeHuangYou(fontSize: 30.0, color: Colors.white)
-                : GoogleFonts.zcoolQingKeHuangYou(
-                    color: Colors.white,
-                  )),
-      ),
-    ),
-    color: Colors.primaries[Random().nextInt(Colors.primaries.length)],
-  );
-}
-
-Future goToPage(BuildContext context, data) async {
-  final result = await buildShowModalBottomSheet(context);
-  if (result != null) {
-    Navigator.push(context, MaterialPageRoute(builder: (_) => QuizTOFPage(questions: questionFromJson(data).where((element) => element.type == result).toList())));
-  }
-}
-
-Future buildShowModalBottomSheet(BuildContext context) {
-  return showModalBottomSheet(
-    context: context,
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(16.0),
-    ),
-    backgroundColor: Colors.white,
-    builder: (BuildContext context) {
-      final bigTextStyle = const TextStyle(fontSize: 30.0);
-      final bigEdgeInsets = const EdgeInsets.symmetric(vertical: 20.0, horizontal: 64.0);
-      return Container(
-        height: bBigSize(context) ? 300 : 150,
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                "选择等级",
-                style: bBigSize(context) ? bigTextStyle : null,
-              ),
-              const SizedBox(height: 8),
-              Wrap(
-                alignment: WrapAlignment.center,
-                runAlignment: WrapAlignment.center,
-                runSpacing: 16.0,
-                spacing: 16.0,
-                children: [
-                  const SizedBox(width: 8),
-                  ...level
-                      .map((e) => ActionChip(
-                            padding: bBigSize(context) ? bigEdgeInsets : null,
-                            label: Text(
-                              e,
-                              style: bBigSize(context) ? bigTextStyle : null,
-                            ),
-                            onPressed: () {
-                              Navigator.pop(context, Type.TOF);
-                            },
-                          ))
-                      .expand((element) => [element, const SizedBox(width: 8)])
-                      .toList()
-                ],
-              ),
-            ],
-          ),
-        ),
-      );
-    },
-  );
-}
 
 bool bBigSize(BuildContext context) => MediaQuery.of(context).size.width > 800;
 
@@ -225,7 +278,173 @@ class _MySearchDelegate extends SearchDelegate<String> {
 
   @override
   Widget buildResults(BuildContext context) {
-    return buildGridView(context, [this.query], _data);
+    return Scrollbar(
+      child: GridView.builder(
+        physics: BouncingScrollPhysics(),
+        padding: const EdgeInsets.all(8.0),
+        itemCount: [this.query].length,
+        itemBuilder: (BuildContext context, int index) {
+          final item = [this.query][index];
+          return Card(
+            child: InkWell(
+              onTap: () async {
+                final Type result = await showModalBottomSheet(
+                  context: context,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(16),
+                      topRight: Radius.circular(16),
+                    ),
+                  ),
+                  backgroundColor: Colors.white,
+                  builder: (BuildContext context) {
+                    final bigTextStyle = const TextStyle(fontSize: 16.0);
+                    final bigEdgeInsets = const EdgeInsets.symmetric(vertical: 16.0, horizontal: 32.0);
+                    int _noOfQuestions = 10;
+                    Difficulty _difficulty = Difficulty.PRIMARY;
+                    Type _quizType = Type.FITB;
+                    bool processing = false;
+                    return StatefulBuilder(
+                      builder: (BuildContext context, void Function(void Function()) setModalState) {
+                        return SingleChildScrollView(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const SizedBox(height: 16),
+                              Text(
+                                "数量",
+                                style: bBigSize(context) ? bigTextStyle : null,
+                              ),
+                              const SizedBox(height: 8),
+                              Wrap(
+                                alignment: WrapAlignment.center,
+                                runAlignment: WrapAlignment.center,
+                                runSpacing: 16.0,
+                                spacing: 16.0,
+                                children: List.generate(5, (index) => (index + 1) * 10)
+                                    .map((e) => ChoiceChip(
+                                          padding: bBigSize(context) ? bigEdgeInsets : null,
+                                          label: Text(
+                                            '$e',
+                                            style: bBigSize(context) ? bigTextStyle : null,
+                                          ),
+                                          selected: _noOfQuestions == e,
+                                          onSelected: (bool selected) {
+                                            setModalState(() {
+                                              _noOfQuestions = e;
+                                            });
+                                          },
+                                        ))
+                                    .toList(),
+                              ),
+                              const SizedBox(height: 16),
+                              Text(
+                                "等级",
+                                style: bBigSize(context) ? bigTextStyle : null,
+                              ),
+                              const SizedBox(height: 8),
+                              Wrap(
+                                alignment: WrapAlignment.center,
+                                runAlignment: WrapAlignment.center,
+                                runSpacing: 16.0,
+                                spacing: 16.0,
+                                children: Difficulty.values
+                                    .map((Difficulty e) => ChoiceChip(
+                                          padding: bBigSize(context) ? bigEdgeInsets : null,
+                                          label: Text(
+                                            difficultyValues.reverse[e],
+                                            style: bBigSize(context) ? bigTextStyle : null,
+                                          ),
+                                          selected: _difficulty == e,
+                                          onSelected: (bool selected) {
+                                            setModalState(() {
+                                              _difficulty = e;
+                                            });
+                                          },
+                                        ))
+                                    .toList(),
+                              ),
+                              const SizedBox(height: 16),
+                              Text(
+                                "题型",
+                                style: bBigSize(context) ? bigTextStyle : null,
+                              ),
+                              const SizedBox(height: 8),
+                              Wrap(
+                                alignment: WrapAlignment.center,
+                                runAlignment: WrapAlignment.center,
+                                runSpacing: 16.0,
+                                spacing: 16.0,
+                                children: Type.values
+                                    .map((e) => ChoiceChip(
+                                          padding: bBigSize(context) ? bigEdgeInsets : null,
+                                          label: Text(
+                                            typeValues.reverse[e],
+                                            style: bBigSize(context) ? bigTextStyle : null,
+                                          ),
+                                          selected: _quizType == e,
+                                          onSelected: (bool selected) {
+                                            setModalState(() {
+                                              _quizType = e;
+                                            });
+                                            //
+                                          },
+                                        ))
+                                    .toList(),
+                              ),
+                              const SizedBox(height: 16),
+                              processing
+                                  ? CircularProgressIndicator()
+                                  : FloatingActionButton(
+                                      tooltip: '开始',
+                                      onPressed: () {
+                                        Navigator.pop(context, _quizType);
+                                      },
+                                      child: Icon(Icons.done_rounded),
+                                    ),
+                              const SizedBox(height: 16),
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  },
+                );
+                if (result != null) {
+                  final list2 = questionFromJson(_data).where((element) => element.type == result).toList();
+                  switch (result) {
+                    case Type.FITB:
+                      Navigator.push(context, MaterialPageRoute(builder: (_) => QuizFITBPage(questions: list2)));
+                      break;
+                    case Type.TOF:
+                      Navigator.push(context, MaterialPageRoute(builder: (_) => QuizTOFPage(questions: list2)));
+                      break;
+                  }
+                }
+              },
+              child: Container(
+                alignment: Alignment.center,
+                padding: const EdgeInsets.all(8.0),
+                child: AutoSizeText(item,
+                    minFontSize: 10.0,
+                    textAlign: TextAlign.center,
+                    maxLines: 3,
+                    wrapWords: false,
+                    style: bBigSize(context)
+                        ? GoogleFonts.zcoolQingKeHuangYou(fontSize: 30.0, color: Colors.white)
+                        : GoogleFonts.zcoolQingKeHuangYou(
+                            color: Colors.white,
+                          )),
+              ),
+            ),
+            color: Colors.primaries[Random().nextInt(Colors.primaries.length)],
+          );
+        },
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: bBigSize(context) ? 5 : 3,
+        ),
+      ),
+    );
   }
 
   @override

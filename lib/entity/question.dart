@@ -79,21 +79,32 @@ class Question {
       };
 }
 
-enum Difficulty { EMPTY }
+enum Difficulty { PRIMARY, INTERMEDIATE, ADVANCED }
 
-final difficultyValues = EnumValues({"初级": Difficulty.EMPTY});
+final difficultyValues = EnumValues({
+  "初级": Difficulty.PRIMARY,
+  "中级": Difficulty.INTERMEDIATE,
+  "高级": Difficulty.ADVANCED,
+});
 
 enum Image { EMPTY }
 
-final imageValues = EnumValues({"题目的图片": Image.EMPTY});
+final imageValues = EnumValues({
+  "题目的图片": Image.EMPTY,
+});
 
 enum Type { FITB, TOF }
 
-final typeValues = EnumValues({"填空题": Type.FITB, "判断题": Type.TOF});
+final typeValues = EnumValues({
+  "填空题": Type.FITB,
+  "判断题": Type.TOF,
+});
 
 enum Work { EMPTY }
 
-final workValues = EnumValues({"化验员": Work.EMPTY});
+final workValues = EnumValues({
+  "化验员": Work.EMPTY,
+});
 
 class EnumValues<T> {
   Map<String, T> map;
