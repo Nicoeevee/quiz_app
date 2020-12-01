@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:quiz_app/pages/me.dart';
 
 import 'pages/home.dart';
@@ -40,6 +41,21 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [
+        const Locale('zh', 'CH'),
+        const Locale('en', 'US'),
+      ],
+      localeListResolutionCallback: (List<Locale> locales, Iterable<Locale> supportedLocales) {
+        if (locales.contains('zh')) {
+          return Locale('zh');
+        }
+        return Locale('en');
+      },
       debugShowCheckedModeBanner: false,
       title: _widgetTitle[_selectedIndex],
       home: Scaffold(
