@@ -37,11 +37,7 @@ class _HomePageState extends State<HomePage> {
                 delegate: _delegate,
               );
               if (selected != null) {
-                Scaffold.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('你选择了: $selected'),
-                  ),
-                );
+                debugPrint('你选择了: $selected');
               }
             },
           ),
@@ -57,136 +53,15 @@ class _HomePageState extends State<HomePage> {
             return Card(
               child: InkWell(
                 onTap: () async {
-                  final Type result = await showModalBottomSheet(
-                    context: context,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(16),
-                        topRight: Radius.circular(16),
-                      ),
-                    ),
-                    backgroundColor: Colors.white,
-                    builder: (BuildContext context) {
-                      final bigTextStyle = const TextStyle(fontSize: 16.0);
-                      final bigEdgeInsets = const EdgeInsets.symmetric(vertical: 16.0, horizontal: 32.0);
-                      int _noOfQuestions = 10;
-                      Difficulty _difficulty = Difficulty.PRIMARY;
-                      Type _quizType = Type.FITB;
-                      bool processing = false;
-                      return StatefulBuilder(
-                        builder: (BuildContext context, void Function(void Function()) setModalState) {
-                          return SingleChildScrollView(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const SizedBox(height: 16),
-                                Text(
-                                  "数量",
-                                  style: bBigSize(context) ? bigTextStyle : null,
-                                ),
-                                const SizedBox(height: 8),
-                                Wrap(
-                                  alignment: WrapAlignment.center,
-                                  runAlignment: WrapAlignment.center,
-                                  runSpacing: 16.0,
-                                  spacing: 16.0,
-                                  children: List.generate(5, (index) => (index + 1) * 10)
-                                      .map((e) => ChoiceChip(
-                                            padding: bBigSize(context) ? bigEdgeInsets : null,
-                                            label: Text(
-                                              '$e',
-                                              style: bBigSize(context) ? bigTextStyle : null,
-                                            ),
-                                            selected: _noOfQuestions == e,
-                                            onSelected: (bool selected) {
-                                              setModalState(() {
-                                                _noOfQuestions = e;
-                                              });
-                                            },
-                                          ))
-                                      .toList(),
-                                ),
-                                const SizedBox(height: 16),
-                                Text(
-                                  "等级",
-                                  style: bBigSize(context) ? bigTextStyle : null,
-                                ),
-                                const SizedBox(height: 8),
-                                Wrap(
-                                  alignment: WrapAlignment.center,
-                                  runAlignment: WrapAlignment.center,
-                                  runSpacing: 16.0,
-                                  spacing: 16.0,
-                                  children: Difficulty.values
-                                      .map((Difficulty e) => ChoiceChip(
-                                            padding: bBigSize(context) ? bigEdgeInsets : null,
-                                            label: Text(
-                                              difficultyValues.reverse[e],
-                                              style: bBigSize(context) ? bigTextStyle : null,
-                                            ),
-                                            selected: _difficulty == e,
-                                            onSelected: (bool selected) {
-                                              setModalState(() {
-                                                _difficulty = e;
-                                              });
-                                            },
-                                          ))
-                                      .toList(),
-                                ),
-                                const SizedBox(height: 16),
-                                Text(
-                                  "题型",
-                                  style: bBigSize(context) ? bigTextStyle : null,
-                                ),
-                                const SizedBox(height: 8),
-                                Wrap(
-                                  alignment: WrapAlignment.center,
-                                  runAlignment: WrapAlignment.center,
-                                  runSpacing: 16.0,
-                                  spacing: 16.0,
-                                  children: Type.values
-                                      .map((e) => ChoiceChip(
-                                            padding: bBigSize(context) ? bigEdgeInsets : null,
-                                            label: Text(
-                                              typeValues.reverse[e],
-                                              style: bBigSize(context) ? bigTextStyle : null,
-                                            ),
-                                            selected: _quizType == e,
-                                            onSelected: (bool selected) {
-                                              setModalState(() {
-                                                _quizType = e;
-                                              });
-                                              //
-                                            },
-                                          ))
-                                      .toList(),
-                                ),
-                                const SizedBox(height: 16),
-                                processing
-                                    ? CircularProgressIndicator()
-                                    : FloatingActionButton(
-                                        tooltip: '开始',
-                                        onPressed: () {
-                                          Navigator.pop(context, _quizType);
-                                        },
-                                        child: Icon(Icons.done_rounded),
-                                      ),
-                                const SizedBox(height: 16),
-                              ],
-                            ),
-                          );
-                        },
-                      );
-                    },
-                  );
+                  final Type result = await buildShowModalBottomSheet(context);
                   if (result != null) {
-                    final list2 = questionFromJson(widget.data).where((element) => element.type == result).toList();
+                    final typeQuestion = questionFromJson(widget.data).where((element) => element.type == result).toList();
                     switch (result) {
                       case Type.FITB:
-                        Navigator.push(context, MaterialPageRoute(builder: (_) => QuizFITBPage(questions: list2)));
+                        Navigator.push(context, MaterialPageRoute(builder: (_) => QuizFITBPage(questions: typeQuestion)));
                         break;
                       case Type.TOF:
-                        Navigator.push(context, MaterialPageRoute(builder: (_) => QuizTOFPage(questions: list2)));
+                        Navigator.push(context, MaterialPageRoute(builder: (_) => QuizTOFPage(questions: typeQuestion)));
                         break;
                     }
                   }
@@ -216,6 +91,131 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+}
+
+Future<Type> buildShowModalBottomSheet(BuildContext context) {
+  return showModalBottomSheet(
+    context: context,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(16),
+        topRight: Radius.circular(16),
+      ),
+    ),
+    backgroundColor: Colors.white,
+    builder: (BuildContext context) {
+      final bigTextStyle = const TextStyle(fontSize: 16.0);
+      final bigEdgeInsets = const EdgeInsets.symmetric(vertical: 16.0, horizontal: 32.0);
+      int _noOfQuestions = 10;
+      Difficulty _difficulty = Difficulty.PRIMARY;
+      Type _quizType = Type.FITB;
+      bool processing = false;
+      return StatefulBuilder(
+        builder: (BuildContext context, void Function(void Function()) setModalState) {
+          return SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const SizedBox(height: 16),
+                Text(
+                  "数量",
+                  style: bBigSize(context) ? bigTextStyle : null,
+                ),
+                const SizedBox(height: 8),
+                Wrap(
+                  alignment: WrapAlignment.center,
+                  runAlignment: WrapAlignment.center,
+                  runSpacing: 16.0,
+                  spacing: 16.0,
+                  children: List.generate(5, (index) => (index + 1) * 10)
+                      .map((e) => ChoiceChip(
+                            padding: bBigSize(context) ? bigEdgeInsets : null,
+                            label: Text(
+                              '$e',
+                              style: bBigSize(context) ? bigTextStyle : null,
+                            ),
+                            selected: _noOfQuestions == e,
+                            onSelected: (bool selected) {
+                              setModalState(() {
+                                _noOfQuestions = e;
+                              });
+                            },
+                          ))
+                      .toList(),
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  "等级",
+                  style: bBigSize(context) ? bigTextStyle : null,
+                ),
+                const SizedBox(height: 8),
+                Wrap(
+                  alignment: WrapAlignment.center,
+                  runAlignment: WrapAlignment.center,
+                  runSpacing: 16.0,
+                  spacing: 16.0,
+                  children: Difficulty.values
+                      .map((Difficulty e) => ChoiceChip(
+                            padding: bBigSize(context) ? bigEdgeInsets : null,
+                            label: Text(
+                              difficultyValues.reverse[e],
+                              style: bBigSize(context) ? bigTextStyle : null,
+                            ),
+                            selected: _difficulty == e,
+                            onSelected: (bool selected) {
+                              setModalState(() {
+                                _difficulty = e;
+                              });
+                            },
+                          ))
+                      .toList(),
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  "题型",
+                  style: bBigSize(context) ? bigTextStyle : null,
+                ),
+                const SizedBox(height: 8),
+                Wrap(
+                  alignment: WrapAlignment.center,
+                  runAlignment: WrapAlignment.center,
+                  runSpacing: 16.0,
+                  spacing: 16.0,
+                  children: Type.values
+                      .map((e) => ChoiceChip(
+                            padding: bBigSize(context) ? bigEdgeInsets : null,
+                            label: Text(
+                              typeValues.reverse[e],
+                              style: bBigSize(context) ? bigTextStyle : null,
+                            ),
+                            selected: _quizType == e,
+                            onSelected: (bool selected) {
+                              setModalState(() {
+                                _quizType = e;
+                              });
+                              //
+                            },
+                          ))
+                      .toList(),
+                ),
+                const SizedBox(height: 16),
+                processing
+                    ? CircularProgressIndicator()
+                    : FloatingActionButton(
+                        tooltip: '开始',
+                        onPressed: () {
+                          Navigator.pop(context, _quizType);
+                        },
+                        child: Icon(Icons.done_rounded),
+                      ),
+                const SizedBox(height: 16),
+              ],
+            ),
+          );
+        },
+      );
+    },
+  );
 }
 
 final List<String> typeOfWork = <String>[
@@ -248,12 +248,12 @@ final List<String> typeOfWork = <String>[
 bool bBigSize(BuildContext context) => MediaQuery.of(context).size.width > 800;
 
 class _MySearchDelegate extends SearchDelegate<String> {
-  final List<String> _types;
-  final List<String> _history;
+  List<String> _allTypes;
+  List<String> _history;
   final _data;
 
   _MySearchDelegate(List<String> types, data)
-      : _types = types,
+      : _allTypes = types,
         _data = data,
         _history = <String>[],
         super();
@@ -278,185 +278,89 @@ class _MySearchDelegate extends SearchDelegate<String> {
 
   @override
   Widget buildResults(BuildContext context) {
-    return Scrollbar(
-      child: GridView.builder(
-        physics: BouncingScrollPhysics(),
-        padding: const EdgeInsets.all(8.0),
-        itemCount: [this.query].length,
-        itemBuilder: (BuildContext context, int index) {
-          final item = [this.query][index];
-          return Card(
-            child: InkWell(
-              onTap: () async {
-                final Type result = await showModalBottomSheet(
-                  context: context,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(16),
-                      topRight: Radius.circular(16),
+    final List<String> suggestions = this.query.isEmpty ? _history : _allTypes.where((word) => word.contains(query)).toList();
+
+    return suggestions.isEmpty
+        ? Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Text('没有找到工种'),
+                GestureDetector(
+                  onTap: () {
+                    // Returns this.query as result to previous screen, c.f.
+                    // `showSearch()` above.
+                    this.close(context, null);
+                  },
+                  child: Text(
+                    this.query,
+                    style: Theme.of(context).textTheme.headline4.copyWith(fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ],
+            ),
+          )
+        : Scrollbar(
+            child: GridView.builder(
+              physics: BouncingScrollPhysics(),
+              padding: const EdgeInsets.all(8.0),
+              itemCount: suggestions.length,
+              itemBuilder: (BuildContext context, int index) {
+                final item = suggestions[index];
+                return Card(
+                  child: InkWell(
+                    onTap: () async {
+                      final Type result = await buildShowModalBottomSheet(context);
+                      if (result != null) {
+                        this.close(context, this.query);
+                        final typeQuestion = questionFromJson(_data).where((element) => element.type == result).toList();
+                        switch (result) {
+                          case Type.FITB:
+                            Navigator.push(context, MaterialPageRoute(builder: (_) => QuizFITBPage(questions: typeQuestion)));
+                            break;
+                          case Type.TOF:
+                            Navigator.push(context, MaterialPageRoute(builder: (_) => QuizTOFPage(questions: typeQuestion)));
+                            break;
+                        }
+                      }
+                    },
+                    child: Container(
+                      alignment: Alignment.center,
+                      padding: const EdgeInsets.all(8.0),
+                      child: AutoSizeText(item,
+                          minFontSize: 10.0,
+                          textAlign: TextAlign.center,
+                          maxLines: 3,
+                          wrapWords: false,
+                          style: bBigSize(context)
+                              ? GoogleFonts.zcoolQingKeHuangYou(fontSize: 30.0, color: Colors.white)
+                              : GoogleFonts.zcoolQingKeHuangYou(
+                                  color: Colors.white,
+                                )),
                     ),
                   ),
-                  backgroundColor: Colors.white,
-                  builder: (BuildContext context) {
-                    final bigTextStyle = const TextStyle(fontSize: 16.0);
-                    final bigEdgeInsets = const EdgeInsets.symmetric(vertical: 16.0, horizontal: 32.0);
-                    int _noOfQuestions = 10;
-                    Difficulty _difficulty = Difficulty.PRIMARY;
-                    Type _quizType = Type.FITB;
-                    bool processing = false;
-                    return StatefulBuilder(
-                      builder: (BuildContext context, void Function(void Function()) setModalState) {
-                        return SingleChildScrollView(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const SizedBox(height: 16),
-                              Text(
-                                "数量",
-                                style: bBigSize(context) ? bigTextStyle : null,
-                              ),
-                              const SizedBox(height: 8),
-                              Wrap(
-                                alignment: WrapAlignment.center,
-                                runAlignment: WrapAlignment.center,
-                                runSpacing: 16.0,
-                                spacing: 16.0,
-                                children: List.generate(5, (index) => (index + 1) * 10)
-                                    .map((e) => ChoiceChip(
-                                          padding: bBigSize(context) ? bigEdgeInsets : null,
-                                          label: Text(
-                                            '$e',
-                                            style: bBigSize(context) ? bigTextStyle : null,
-                                          ),
-                                          selected: _noOfQuestions == e,
-                                          onSelected: (bool selected) {
-                                            setModalState(() {
-                                              _noOfQuestions = e;
-                                            });
-                                          },
-                                        ))
-                                    .toList(),
-                              ),
-                              const SizedBox(height: 16),
-                              Text(
-                                "等级",
-                                style: bBigSize(context) ? bigTextStyle : null,
-                              ),
-                              const SizedBox(height: 8),
-                              Wrap(
-                                alignment: WrapAlignment.center,
-                                runAlignment: WrapAlignment.center,
-                                runSpacing: 16.0,
-                                spacing: 16.0,
-                                children: Difficulty.values
-                                    .map((Difficulty e) => ChoiceChip(
-                                          padding: bBigSize(context) ? bigEdgeInsets : null,
-                                          label: Text(
-                                            difficultyValues.reverse[e],
-                                            style: bBigSize(context) ? bigTextStyle : null,
-                                          ),
-                                          selected: _difficulty == e,
-                                          onSelected: (bool selected) {
-                                            setModalState(() {
-                                              _difficulty = e;
-                                            });
-                                          },
-                                        ))
-                                    .toList(),
-                              ),
-                              const SizedBox(height: 16),
-                              Text(
-                                "题型",
-                                style: bBigSize(context) ? bigTextStyle : null,
-                              ),
-                              const SizedBox(height: 8),
-                              Wrap(
-                                alignment: WrapAlignment.center,
-                                runAlignment: WrapAlignment.center,
-                                runSpacing: 16.0,
-                                spacing: 16.0,
-                                children: Type.values
-                                    .map((e) => ChoiceChip(
-                                          padding: bBigSize(context) ? bigEdgeInsets : null,
-                                          label: Text(
-                                            typeValues.reverse[e],
-                                            style: bBigSize(context) ? bigTextStyle : null,
-                                          ),
-                                          selected: _quizType == e,
-                                          onSelected: (bool selected) {
-                                            setModalState(() {
-                                              _quizType = e;
-                                            });
-                                            //
-                                          },
-                                        ))
-                                    .toList(),
-                              ),
-                              const SizedBox(height: 16),
-                              processing
-                                  ? CircularProgressIndicator()
-                                  : FloatingActionButton(
-                                      tooltip: '开始',
-                                      onPressed: () {
-                                        Navigator.pop(context, _quizType);
-                                      },
-                                      child: Icon(Icons.done_rounded),
-                                    ),
-                              const SizedBox(height: 16),
-                            ],
-                          ),
-                        );
-                      },
-                    );
-                  },
+                  color: Colors.primaries[Random().nextInt(Colors.primaries.length)],
                 );
-                if (result != null) {
-                  final list2 = questionFromJson(_data).where((element) => element.type == result).toList();
-                  switch (result) {
-                    case Type.FITB:
-                      Navigator.push(context, MaterialPageRoute(builder: (_) => QuizFITBPage(questions: list2)));
-                      break;
-                    case Type.TOF:
-                      Navigator.push(context, MaterialPageRoute(builder: (_) => QuizTOFPage(questions: list2)));
-                      break;
-                  }
-                }
               },
-              child: Container(
-                alignment: Alignment.center,
-                padding: const EdgeInsets.all(8.0),
-                child: AutoSizeText(item,
-                    minFontSize: 10.0,
-                    textAlign: TextAlign.center,
-                    maxLines: 3,
-                    wrapWords: false,
-                    style: bBigSize(context)
-                        ? GoogleFonts.zcoolQingKeHuangYou(fontSize: 30.0, color: Colors.white)
-                        : GoogleFonts.zcoolQingKeHuangYou(
-                            color: Colors.white,
-                          )),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: bBigSize(context) ? 5 : 3,
               ),
             ),
-            color: Colors.primaries[Random().nextInt(Colors.primaries.length)],
           );
-        },
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: bBigSize(context) ? 5 : 3,
-        ),
-      ),
-    );
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    final Iterable<String> suggestions = this.query.isEmpty ? _history : _types.where((word) => word.contains(query));
+    final Iterable<String> suggestions = this.query.isEmpty ? _history : _allTypes.where((word) => word.contains(query));
 
     return _SuggestionList(
       query: this.query,
       suggestions: suggestions.toList(),
       onSelected: (String suggestion) {
         this.query = suggestion;
-        this._history.insert(0, suggestion);
+        this._history
+          ..remove(suggestion)
+          ..insert(0, suggestion);
         showResults(context);
       },
     );
