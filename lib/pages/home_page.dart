@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive/hive.dart';
@@ -154,6 +155,7 @@ class HomePage extends StatelessWidget {
                   final type = box.get('type', defaultValue: null);
 
                   return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       OutlineButton(
                         child: Text(type == null ? '选择工种' : '开始$type测试'),
