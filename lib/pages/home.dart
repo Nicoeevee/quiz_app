@@ -50,38 +50,23 @@ class _HomePageState extends State<HomePage> {
           itemCount: typeOfWork.length,
           itemBuilder: (BuildContext context, int index) {
             final item = typeOfWork[index];
-            return Card(
-              child: InkWell(
-                onTap: () async {
-                  final Type result = await buildShowModalBottomSheet(context);
-                  if (result != null) {
-                    final typeQuestion = questionFromJson(widget.data).where((element) => element.type == result).toList();
-                    switch (result) {
-                      case Type.FITB:
-                        Navigator.push(context, MaterialPageRoute(builder: (_) => QuizFITBPage(questions: typeQuestion)));
-                        break;
-                      case Type.TOF:
-                        Navigator.push(context, MaterialPageRoute(builder: (_) => QuizTOFPage(questions: typeQuestion)));
-                        break;
-                    }
+            return buildCard(
+              context,
+              item,
+              onTap: () async {
+                final Type result = await buildShowModalBottomSheet(context);
+                if (result != null) {
+                  final typeQuestion = questionFromJson(widget.data).where((element) => element.type == result).toList();
+                  switch (result) {
+                    case Type.FITB:
+                      Navigator.push(context, MaterialPageRoute(builder: (_) => QuizFITBPage(questions: typeQuestion)));
+                      break;
+                    case Type.TOF:
+                      Navigator.push(context, MaterialPageRoute(builder: (_) => QuizTOFPage(questions: typeQuestion)));
+                      break;
                   }
-                },
-                child: Container(
-                  alignment: Alignment.center,
-                  padding: const EdgeInsets.all(8.0),
-                  child: AutoSizeText(item,
-                      minFontSize: 10.0,
-                      textAlign: TextAlign.center,
-                      maxLines: 3,
-                      wrapWords: false,
-                      style: bBigSize(context)
-                          ? GoogleFonts.zcoolQingKeHuangYou(fontSize: 30.0, color: Colors.white)
-                          : GoogleFonts.zcoolQingKeHuangYou(
-                              color: Colors.white,
-                            )),
-                ),
-              ),
-              color: Colors.primaries[Random().nextInt(Colors.primaries.length)],
+                }
+              },
             );
           },
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -91,6 +76,29 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+}
+
+Card buildCard(BuildContext context, String item, {VoidCallback onTap}) {
+  return Card(
+    child: InkWell(
+      onTap: onTap,
+      child: Container(
+        alignment: Alignment.center,
+        padding: const EdgeInsets.all(8.0),
+        child: AutoSizeText(item,
+            minFontSize: 10.0,
+            textAlign: TextAlign.center,
+            maxLines: 3,
+            wrapWords: false,
+            style: bBigSize(context)
+                ? GoogleFonts.zcoolQingKeHuangYou(fontSize: 30.0, color: Colors.white)
+                : GoogleFonts.zcoolQingKeHuangYou(
+                    color: Colors.white,
+                  )),
+      ),
+    ),
+    color: Colors.primaries[Random().nextInt(Colors.primaries.length)],
+  );
 }
 
 Future<Type> buildShowModalBottomSheet(BuildContext context) {
@@ -307,39 +315,24 @@ class _MySearchDelegate extends SearchDelegate<String> {
               itemCount: suggestions.length,
               itemBuilder: (BuildContext context, int index) {
                 final item = suggestions[index];
-                return Card(
-                  child: InkWell(
-                    onTap: () async {
-                      final Type result = await buildShowModalBottomSheet(context);
-                      if (result != null) {
-                        this.close(context, this.query);
-                        final typeQuestion = questionFromJson(_data).where((element) => element.type == result).toList();
-                        switch (result) {
-                          case Type.FITB:
-                            Navigator.push(context, MaterialPageRoute(builder: (_) => QuizFITBPage(questions: typeQuestion)));
-                            break;
-                          case Type.TOF:
-                            Navigator.push(context, MaterialPageRoute(builder: (_) => QuizTOFPage(questions: typeQuestion)));
-                            break;
-                        }
+                return buildCard(
+                  context,
+                  item,
+                  onTap: () async {
+                    final Type result = await buildShowModalBottomSheet(context);
+                    if (result != null) {
+                      this.close(context, this.query);
+                      final typeQuestion = questionFromJson(_data).where((element) => element.type == result).toList();
+                      switch (result) {
+                        case Type.FITB:
+                          Navigator.push(context, MaterialPageRoute(builder: (_) => QuizFITBPage(questions: typeQuestion)));
+                          break;
+                        case Type.TOF:
+                          Navigator.push(context, MaterialPageRoute(builder: (_) => QuizTOFPage(questions: typeQuestion)));
+                          break;
                       }
-                    },
-                    child: Container(
-                      alignment: Alignment.center,
-                      padding: const EdgeInsets.all(8.0),
-                      child: AutoSizeText(item,
-                          minFontSize: 10.0,
-                          textAlign: TextAlign.center,
-                          maxLines: 3,
-                          wrapWords: false,
-                          style: bBigSize(context)
-                              ? GoogleFonts.zcoolQingKeHuangYou(fontSize: 30.0, color: Colors.white)
-                              : GoogleFonts.zcoolQingKeHuangYou(
-                                  color: Colors.white,
-                                )),
-                    ),
-                  ),
-                  color: Colors.primaries[Random().nextInt(Colors.primaries.length)],
+                    }
+                  },
                 );
               },
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
