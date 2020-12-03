@@ -24,7 +24,6 @@ class _ChoiceTypePageState extends State<ChoiceTypePage> {
     return Scaffold(
       appBar: AppBar(
         primary: true,
-        automaticallyImplyLeading: false,
         title: Text('目录'),
         actions: <Widget>[
           IconButton(
