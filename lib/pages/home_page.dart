@@ -142,50 +142,68 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('主页'),
-      ),
-      body: Center(
-        child: FutureBuilder(
-            future: _loadFromAsset(),
-            builder: (context, snapshot) {
-              return ValueListenableBuilder(
-                valueListenable: Hive.box('settings').listenable(),
-                builder: (BuildContext context, box, Widget child) {
-                  final type = box.get('type', defaultValue: null);
+      extendBodyBehindAppBar: true,
+      body: Stack(
+        children: [
+          Positioned(
+            top: 0.0,
+            left: 0.0,
+            right: 0.0,
+            child: AppBar(
+              title: Text('主页'),
+            ),
+          ),
+          Positioned(
+            top: 32.0,
+            right: 8.0,
+            child: Image.asset(
+              'assets/images/splash_icon.png',
+              height: 128,
+            ),
+          ),
+          Center(
+            child: FutureBuilder(
+                future: _loadFromAsset(),
+                builder: (context, snapshot) {
+                  return ValueListenableBuilder(
+                    valueListenable: Hive.box('settings').listenable(),
+                    builder: (BuildContext context, box, Widget child) {
+                      final type = box.get('type', defaultValue: null);
 
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      OutlineButton(
-                        child: Text(type == null ? '选择工种' : '开始$type测试'),
-                        onPressed: () {
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          OutlineButton(
+                            child: Text(type == null ? '选择工种' : '开始$type测试'),
+                            onPressed: () {
+                              type == null
+                                  ? Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) => ChoiceTypePage(data: snapshot.data, type: type),
+                                      ))
+                                  : showQuizBottomSheet(context, snapshot);
+                            },
+                          ),
                           type == null
-                              ? Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (_) => ChoiceTypePage(data: snapshot.data, type: type),
-                                  ))
-                              : showQuizBottomSheet(context, snapshot);
-                        },
-                      ),
-                      type == null
-                          ? Container()
-                          : OutlineButton(
-                              child: Text('更改工种'),
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_) => ChoiceTypePage(data: snapshot.data, type: type),
-                                    ));
-                              },
-                            ),
-                    ],
+                              ? Container()
+                              : OutlineButton(
+                                  child: Text('更改工种'),
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (_) => ChoiceTypePage(data: snapshot.data, type: type),
+                                        ));
+                                  },
+                                ),
+                        ],
+                      );
+                    },
                   );
-                },
-              );
-            }),
+                }),
+          ),
+        ],
       ),
     );
   }

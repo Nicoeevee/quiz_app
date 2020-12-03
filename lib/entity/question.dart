@@ -27,7 +27,7 @@ class Question {
   int gmtCreate;
   int gmtModified;
   int id;
-  Image image;
+  QuestionImage image;
   Type type;
   Work work;
 
@@ -38,7 +38,7 @@ class Question {
     int gmtCreate,
     int gmtModified,
     int id,
-    Image image,
+    QuestionImage image,
     Type type,
     Work work,
   }) =>
@@ -87,10 +87,10 @@ final difficultyValues = EnumValues({
   "高级": Difficulty.ADVANCED,
 });
 
-enum Image { EMPTY }
+enum QuestionImage { EMPTY }
 
 final imageValues = EnumValues({
-  "题目的图片": Image.EMPTY,
+  "题目的图片": QuestionImage.EMPTY,
 });
 
 enum Type { FITB, TOF }
