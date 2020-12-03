@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:quiz_app/pages/home_page.dart';
 import 'package:quiz_app/pages/me.dart';
-
-import 'pages/home.dart';
 
 void main() {
   runApp(MyApp());
@@ -14,24 +12,11 @@ class MyApp extends StatefulWidget {
   _MyAppState createState() => _MyAppState();
 }
 
-Future<String> _loadFromAsset() async {
-  return await rootBundle.loadString("assets/quiz.json");
-}
-
 class _MyAppState extends State<MyApp> {
   int _selectedIndex = 0;
-  static List<Widget> _widgetOptions = <Widget>[
-    FutureBuilder(
-        future: _loadFromAsset(),
-        builder: (context, snapshot) {
-          return HomePage(
-            data: snapshot.data,
-          );
-        }),
-    MePage()
-  ];
+  static List<Widget> _widgetOptions = <Widget>[HomePage(), MePage()];
   static Map<String, dynamic> _widgetTitle = {
-    '目录': Icons.category,
+    '主页': Icons.category,
     '我的': Icons.person,
   };
 

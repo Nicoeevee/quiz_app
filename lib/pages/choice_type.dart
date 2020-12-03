@@ -8,16 +8,16 @@ import 'package:quiz_app/pages/quiz_fitb_page.dart';
 
 import 'quiz_tof_page.dart';
 
-class HomePage extends StatefulWidget {
+class ChoiceTypePage extends StatefulWidget {
   final data;
 
-  HomePage({Key key, this.data}) : super(key: key);
+  ChoiceTypePage({Key key, this.data}) : super(key: key);
 
   @override
-  _HomePageState createState() => _HomePageState();
+  _ChoiceTypePageState createState() => _ChoiceTypePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _ChoiceTypePageState extends State<ChoiceTypePage> {
   @override
   Widget build(BuildContext context) {
     _MySearchDelegate _delegate = _MySearchDelegate(typeOfWork, widget.data);
