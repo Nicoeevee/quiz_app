@@ -3,15 +3,14 @@ import 'dart:math';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hive/hive.dart';
 import 'package:quiz_app/entity/question.dart';
-import 'package:quiz_app/pages/quiz_fitb_page.dart';
-
-import 'quiz_tof_page.dart';
 
 class ChoiceTypePage extends StatefulWidget {
   final data;
+  final String type;
 
-  ChoiceTypePage({Key key, this.data}) : super(key: key);
+  ChoiceTypePage({Key key, this.data, this.type}) : super(key: key);
 
   @override
   _ChoiceTypePageState createState() => _ChoiceTypePageState();
@@ -54,18 +53,20 @@ class _ChoiceTypePageState extends State<ChoiceTypePage> {
               context,
               item,
               onTap: () async {
-                final Type result = await buildShowModalBottomSheet(context);
-                if (result != null) {
-                  final typeQuestion = questionFromJson(widget.data).where((element) => element.type == result).toList();
-                  switch (result) {
-                    case Type.FITB:
-                      Navigator.push(context, MaterialPageRoute(builder: (_) => QuizFITBPage(questions: typeQuestion)));
-                      break;
-                    case Type.TOF:
-                      Navigator.push(context, MaterialPageRoute(builder: (_) => QuizTOFPage(questions: typeQuestion)));
-                      break;
-                  }
-                }
+                Hive.box('settings').put('type', item);
+                Navigator.pop(context);
+                // final Type result = await buildShowModalBottomSheet(context);
+                // if (result != null) {
+                //   final typeQuestion = questionFromJson(widget.data).where((element) => element.type == result).toList();
+                //   switch (result) {
+                //     case Type.FITB:
+                //       Navigator.push(context, MaterialPageRoute(builder: (_) => QuizFITBPage(questions: typeQuestion)));
+                //       break;
+                //     case Type.TOF:
+                //       Navigator.push(context, MaterialPageRoute(builder: (_) => QuizTOFPage(questions: typeQuestion)));
+                //       break;
+                //   }
+                // }
               },
             );
           },
@@ -319,19 +320,22 @@ class _MySearchDelegate extends SearchDelegate<String> {
                   context,
                   item,
                   onTap: () async {
-                    final Type result = await buildShowModalBottomSheet(context);
-                    if (result != null) {
-                      this.close(context, this.query);
-                      final typeQuestion = questionFromJson(_data).where((element) => element.type == result).toList();
-                      switch (result) {
-                        case Type.FITB:
-                          Navigator.push(context, MaterialPageRoute(builder: (_) => QuizFITBPage(questions: typeQuestion)));
-                          break;
-                        case Type.TOF:
-                          Navigator.push(context, MaterialPageRoute(builder: (_) => QuizTOFPage(questions: typeQuestion)));
-                          break;
-                      }
-                    }
+                    Hive.box('settings').put('type', item);
+                    this.close(context, null);
+                    Navigator.pop(context);
+                    // final Type result = await buildShowModalBottomSheet(context);
+                    // if (result != null) {
+                    //   this.close(context, this.query);
+                    //   final typeQuestion = questionFromJson(_data).where((element) => element.type == result).toList();
+                    //   switch (result) {
+                    //     case Type.FITB:
+                    //       Navigator.push(context, MaterialPageRoute(builder: (_) => QuizFITBPage(questions: typeQuestion)));
+                    //       break;
+                    //     case Type.TOF:
+                    //       Navigator.push(context, MaterialPageRoute(builder: (_) => QuizTOFPage(questions: typeQuestion)));
+                    //       break;
+                    //   }
+                    // }
                   },
                 );
               },
