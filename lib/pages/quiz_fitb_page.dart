@@ -76,18 +76,28 @@ class _QuizFITBPageState extends State<QuizFITBPage> {
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
+        resizeToAvoidBottomPadding: false,
         key: _key,
         appBar: AppBar(
           title: Text("${typeValues.reverse[question.type]} ${_currentIndex + 1}/${widget.questions.length}"),
         ),
         body: Stack(
           children: [
-            ClipPath(
-              clipper: WaveClipperTwo(),
-              child: Container(
-                decoration: BoxDecoration(color: Theme.of(context).primaryColor),
-                height: 200,
-              ),
+            Column(
+              children: [
+                LinearProgressIndicator(
+                  backgroundColor: Colors.white,
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+                  value: _currentIndex / widget.questions.length,
+                ),
+                ClipPath(
+                  clipper: WaveClipperTwo(),
+                  child: Container(
+                    decoration: BoxDecoration(color: Theme.of(context).primaryColor),
+                    height: 200,
+                  ),
+                ),
+              ],
             ),
             Padding(
               padding: const EdgeInsets.all(16.0),
