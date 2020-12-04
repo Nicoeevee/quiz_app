@@ -69,8 +69,7 @@ class _QuizTOFPageState extends State<QuizTOFPage> {
             },
           ),
         ));
-    }
-    if (shouldNext) {
+    } else if (shouldNext) {
       _next();
       shouldNext = false;
       return;
@@ -92,8 +91,10 @@ class _QuizTOFPageState extends State<QuizTOFPage> {
       child: GestureDetector(
         onHorizontalDragEnd: (details) {
           if (details.primaryVelocity.sign < 0) {
+            // 左划下一题
             _checkAndNext();
           } else if (details.primaryVelocity.sign > 0) {
+            // 右划上一题
             _prev();
           }
         },
