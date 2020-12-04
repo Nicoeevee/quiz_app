@@ -1,5 +1,5 @@
+import 'package:data/local/models/question.dart';
 import 'package:flutter/material.dart';
-import 'package:quiz_app/entity/question.dart';
 
 class CheckAnswersPage extends StatelessWidget {
   final List<Question> questions;

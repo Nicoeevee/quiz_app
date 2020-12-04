@@ -1,8 +1,8 @@
+import 'package:data/local/models/question.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
-import 'package:quiz_app/pages/quiz_finished.dart';
-
-import '../entity/question.dart';
+import 'package:quiz_app/pages/quiz_finished_page.dart';
+import 'package:quiz_app/widgets/screen_size_widget.dart';
 
 class QuizTOFPage extends StatefulWidget {
   final List<Question> questions;
@@ -248,12 +248,6 @@ class _QuizTOFPageState extends State<QuizTOFPage> {
       ),
     );
   }
-
-  bool bBigSize(BuildContext context) => MediaQuery.of(context).size.width > 800;
-
-  TextStyle calStyle(BuildContext context) => bBigSize(context) ? TextStyle(fontSize: 30.0) : null;
-
-  EdgeInsets calPadding(BuildContext context) => bBigSize(context) ? const EdgeInsets.symmetric(vertical: 20.0, horizontal: 64.0) : null;
 
   Future<bool> _onWillPop() async {
     return showDialog<bool>(
