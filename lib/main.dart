@@ -3,7 +3,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:quiz_app/pages/home_page.dart';
-import 'package:quiz_app/pages/me.dart';
+import 'package:quiz_app/pages/me_page.dart';
 
 void main() async {
   await Hive.initFlutter();

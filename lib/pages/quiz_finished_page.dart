@@ -1,7 +1,7 @@
+import 'package:data/local/models/question.dart';
 import 'package:flutter/material.dart';
 
-import '../entity/question.dart';
-import 'check_answers.dart';
+import 'check_answers_page.dart';
 
 class QuizFinishedPage extends StatefulWidget {
   final List<Question> questions;
